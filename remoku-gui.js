@@ -1057,174 +1057,94 @@ function activateButton(btn){
 function textModeOff(){keyboardMode=false;}
 function textModeOn() {keyboardMode=true; }
 
+function handleKeyUpDown(keyUpOrDown, evt) {
+  action = null;
+  switch (evt.keyCode) {
+    case 37:
+      action = "Left";
+      break;
+    case 38:
+      if (evt.shiftKey) {
+        action = "VolumeUp";
+      } else {
+        action = "Up";
+      }
+      break;
+    case 39:
+      action = "Right";
+      break;
+    case 40:
+      if (evt.shiftKey) {
+        action = "VolumeDown";
+      } else {
+        action = "Down";
+      }
+      break;
+    case 13:
+      action = "Select";
+      break;
+    case 36:
+    case 72:
+      action = "Home";
+      break;
+    case 82:
+    case 27:
+      action = "Back";
+      break;
+    case 90:
+      action = "InstantReplay";
+      break;
+    case 42:  // *
+      if (evt.shiftKey) {
+        action = "Info";
+      }
+      break;
+    case 73:
+      action = "Info";
+      break;
+    case 32:
+      action = "Play";
+      break;
+    case 188:
+      action = "Rev";
+      break;
+    case 190:
+      action = "Fwd";
+      break;
+    case 65:
+      action = "A";
+      break;
+    case 66:
+      action = "B";
+      break;
+    case 9:
+      $('textentry').focus();
+      evt.preventDefault();
+      break;
+    default:
+      break;
+  }
+
+  if (action != null) {
+    //dbg(action.toLowerCase());
+    rokupost(keyUpOrDown, action);
+  }
+}
+
 function handleArrowKeyDown(evt) {
     evt = (evt) ? evt : ((window.event) ? event : null);
     if (evt && keyboardMode && firstDown) {
-	    firstDown = false;
-        switch (evt.keyCode) {
-            case 37:
-                //dbg("left");
-                rokupost("keydown","Left");
-                break;    
-            case 38:
-                if (evt.shiftKey) {
-                  //dbg("volumeup");
-                  rokupost("keydown","VolumeUp");
-                } else {
-                  //dbg("up");
-                  rokupost("keydown","Up");
-                }
-                break;
-            case 39:
-                //dbg("right");
-                rokupost("keydown","Right");
-                break;    
-            case 40:
-                if (evt.shiftKey) {
-                  //dbg("volumedown");
-                  rokupost("keydown","VolumeDown");
-                } else {
-                  //dbg("down");
-                  rokupost("keydown","Down");
-                }
-                break;
-            case 13:
-                //dbg("Enter");
-                rokupost("keydown","Select");
-                break;    
-            case 36:
-                //dbg("Home");
-                rokupost("keydown","Home");
-                break;    
-            case 72:
-                //dbg("Home");
-                rokupost("keydown","Home");
-                break;    
-            case 82:
-                //dbg("Return");
-                rokupost("keydown","Back");
-                break;    
-            case 27:
-                //dbg("Return");
-                rokupost("keydown","Back");
-                break;    
-            case 90:
-                //dbg("Replay");
-                rokupost("keydown","InstantReplay");
-                break;    
-            case 73:
-                //dbg("Info");
-                rokupost("keydown","Info");
-                break;    
-            case 32:
-                //dbg("Play");
-                rokupost("keydown","Play");
-                break;    
-            case 188:
-                //dbg("Rev");
-                rokupost("keydown","Rev");
-                break;    
-            case 190:
-                //dbg("Fwd");
-                rokupost("keydown","Fwd");
-                break;
-            case 65:
-                rokupost("keydown","A");
-            	  break;
-            case 66:
-                rokupost("keydown","B");
-            	  break;
-            case 9:
-            	$('textentry').focus();
-            	evt.preventDefault();
-            	break;
-            default:
-            break;
-         }
+      firstDown = false;
+      handleKeyUpDown("keydown", evt);
     }
 }
 
 function handleArrowKeyUp(evt) {
-    evt = (evt) ? evt : ((window.event) ? event : null);
-    if (evt && keyboardMode) {
-	    firstDown = true;
-        switch (evt.keyCode) {
-            case 37:
-                //dbg("left");
-                rokupost("keyup","Left");
-                break;    
-            case 38:
-                if (evt.shiftKey) {
-                  //dbg("volumeup");
-                  rokupost("keyup","VolumeUp");
-                } else {
-                  //dbg("up");
-                  rokupost("keyup","Up");
-                }
-                break;
-            case 39:
-                //dbg("right");
-                rokupost("keyup","Right");
-                break;    
-            case 40:
-                if (evt.shiftKey) {
-                  //dbg("volumedown");
-                  rokupost("keyup","VolumeDown");
-                } else {
-                  //dbg("down");
-                  rokupost("keyup","Down");
-                }
-                break;
-            case 13:
-                //dbg("Enter");
-                rokupost("keyup","Select");
-                break;    
-            case 36:
-                //dbg("Home");
-                rokupost("keyup","Home");
-                break;    
-            case 72:
-                //dbg("Home");
-                rokupost("keyup","Home");
-                break;    
-            case 82:
-                //dbg("Return");
-                rokupost("keyup","Back");
-                break;    
-            case 27:
-                //dbg("Return");
-                rokupost("keyup","Back");
-                break;    
-            case 90:
-                //dbg("Replay");
-                rokupost("keyup","InstantReplay");
-                break;    
-            case 32:
-                //dbg("Play");
-                rokupost("keyup","Play");
-                break;    
-            case 188:
-                //dbg("Rev");
-                rokupost("keyup","Rev");
-                break;    
-            case 190:
-                //dbg("Fwd");
-                rokupost("keyup","Fwd");
-                break;
-            case 65:
-                rokupost("keyup","A");
-            	  break;
-            case 66:
-                rokupost("keyup","B");
-            	  break;
-            case 9:
-            	$('textentry').focus();
-            	evt.preventDefault();
-            	break;
-            default:
-            break;
-         }
-    }
+  evt = (evt) ? evt : ((window.event) ? event : null);
+  if (evt && keyboardMode) {
+    firstDown = true;
+    handleKeyUpDown("keyup", evt);
+  }
 }
 
 function touchshowRemotes(){

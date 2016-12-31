@@ -1067,17 +1067,27 @@ function handleArrowKeyDown(evt) {
                 rokupost("keydown","Left");
                 break;    
             case 38:
-                //dbg("up");
-                rokupost("keydown","Up");
-                break;    
+                if (evt.shiftKey) {
+                  //dbg("volumeup");
+                  rokupost("keydown","VolumeUp");
+                } else {
+                  //dbg("up");
+                  rokupost("keydown","Up");
+                }
+                break;
             case 39:
                 //dbg("right");
                 rokupost("keydown","Right");
                 break;    
             case 40:
-                //dbg("down");
-                rokupost("keydown","Down");
-                break;    
+                if (evt.shiftKey) {
+                  //dbg("volumedown");
+                  rokupost("keydown","VolumeDown");
+                } else {
+                  //dbg("down");
+                  rokupost("keydown","Down");
+                }
+                break;
             case 13:
                 //dbg("Enter");
                 rokupost("keydown","Select");
@@ -1144,17 +1154,27 @@ function handleArrowKeyUp(evt) {
                 rokupost("keyup","Left");
                 break;    
             case 38:
-                //dbg("up");
-                rokupost("keyup","Up");
-                break;    
+                if (evt.shiftKey) {
+                  //dbg("volumeup");
+                  rokupost("keyup","VolumeUp");
+                } else {
+                  //dbg("up");
+                  rokupost("keyup","Up");
+                }
+                break;
             case 39:
                 //dbg("right");
                 rokupost("keyup","Right");
                 break;    
             case 40:
-                //dbg("down");
-                rokupost("keyup","Down");
-                break;    
+                if (evt.shiftKey) {
+                  //dbg("volumedown");
+                  rokupost("keyup","VolumeDown");
+                } else {
+                  //dbg("down");
+                  rokupost("keyup","Down");
+                }
+                break;
             case 13:
                 //dbg("Enter");
                 rokupost("keyup","Select");

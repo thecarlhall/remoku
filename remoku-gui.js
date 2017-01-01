@@ -3,6 +3,9 @@
 //Copyright 2012
 //License: NEW BSD
 //
+
+const DEBUG = false;
+
 ////////////////////////
 //BEGIN HELPER FUNCTIONS
 //list of variable stored to cookies/localStorage
@@ -280,6 +283,10 @@ function eraseCookie(name) {
 }
 
 function dbg(log){
+    if (!DEBUG) {
+        return;
+    }
+
 	if (typeof JSON!=='undefined' && typeof log !=='string') log = JSON.stringify(log);
 	if (typeof console!=='undefined') console.log(log);
 	//else alert (log);
@@ -687,7 +694,9 @@ function rokupost(action, param){
 			action  = actions.shift();
 			var rokupost = $('rokupost');
 			rokupost.setAttribute("action", "http://" + rokuAddress + ":8060/" + action.cmd + "/" + action.param);
-			rokupost.submit();
+			if (!DEBUG) {
+			    rokupost.submit();
+			}
 			dbg({actions:actions,action:action,param:param});
 			return false;
 		}else {
@@ -1057,80 +1066,6 @@ function activateButton(btn){
 function textModeOff(){keyboardMode=false;}
 function textModeOn() {keyboardMode=true; }
 
-function handleKeyUpDown(keyUpOrDown, evt) {
-  action = null;
-  switch (evt.keyCode) {
-    case 37:
-      action = "Left";
-      break;
-    case 38:
-      if (evt.shiftKey) {
-        action = "VolumeUp";
-      } else {
-        action = "Up";
-      }
-      break;
-    case 39:
-      action = "Right";
-      break;
-    case 40:
-      if (evt.shiftKey) {
-        action = "VolumeDown";
-      } else {
-        action = "Down";
-      }
-      break;
-    case 13:
-      action = "Select";
-      break;
-    case 36:
-    case 72:
-      action = "Home";
-      break;
-    case 82:
-    case 27:
-      action = "Back";
-      break;
-    case 90:
-      action = "InstantReplay";
-      break;
-    case 42:  // *
-      if (evt.shiftKey) {
-        action = "Info";
-      }
-      break;
-    case 73:
-      action = "Info";
-      break;
-    case 32:
-      action = "Play";
-      break;
-    case 188:
-      action = "Rev";
-      break;
-    case 190:
-      action = "Fwd";
-      break;
-    case 65:
-      action = "A";
-      break;
-    case 66:
-      action = "B";
-      break;
-    case 9:
-      $('textentry').focus();
-      evt.preventDefault();
-      break;
-    default:
-      break;
-  }
-
-  if (action != null) {
-    //dbg(action.toLowerCase());
-    rokupost(keyUpOrDown, action);
-  }
-}
-
 function handleArrowKeyDown(evt) {
     evt = (evt) ? evt : ((window.event) ? event : null);
     if (evt && keyboardMode && firstDown) {
@@ -1144,6 +1079,113 @@ function handleArrowKeyUp(evt) {
   if (evt && keyboardMode) {
     firstDown = true;
     handleKeyUpDown("keyup", evt);
+  }
+}
+
+function handleKeyUpDown(keyUpOrDown, evt) {
+  let action = null;
+
+  switch (evt.keyCode) {
+    case 37: // left arrow
+    case 72: // h
+      if (!evt.shiftKey) { // shift is for VolumeUp
+        action = "Left";
+      }
+      break;
+    case 38: // up arrow
+    case 75: // k
+      if (!evt.shiftKey) { // shift is for VolumeUp
+        action = "Up";
+      }
+      break;
+    case 39: // right arrow
+    case 76: // l
+      if (!evt.shiftKey) {
+        action = "Right";
+      }
+      break;
+    case 40: // down arrow
+    case 74: // j
+      if (!evt.shiftKey) { // shift is for VolumeDown
+        action = "Down";
+      }
+      break;
+    case 27: // escape
+    case 82: // r
+      action = "Back";
+      break;
+    case 90: // z
+      action = "InstantReplay";
+      break;
+    case 188: // ,
+      action = "Rev";
+      break;
+    case 190: // .
+      action = "Fwd";
+      break;
+    case 65: // a
+      action = "A";
+      break;
+    case 66: // b
+      action = "B";
+      break;
+  }
+
+  if (action != null) {
+    dbg(action.toLowerCase());
+    rokupost(keyUpOrDown, action);
+  }
+}
+
+function handleKeyPress(evt) {
+  evt = (evt) ? evt : ((window.event) ? event : null);
+  if (evt && keyboardMode) {
+    let action = null;
+    let keyCode = evt.which || evt.keyCode;
+
+    switch (keyCode) {
+      case 13: // enter key
+        action = "Select";
+        break;
+      case 32: // space bar
+        action = "Play";
+        break;
+      case 36: // home key
+        action = "Home";
+        break;
+      case 38: // up arrow
+      case 72: // K
+        if (evt.shiftKey) {
+          action = "VolumeUp";
+        }
+        break;
+      case 40: // down arrow
+      case 74: // J
+        if (evt.shiftKey) {
+          action = "VolumeDown";
+        }
+        break;
+      case 42: // *
+        if (evt.shiftKey) {
+          action = "Info";
+        }
+        break;
+      case 73: // i
+        action = "Info";
+        break;
+      case 72: // home key
+        action = "Home";
+        break;
+      case 9: // tab
+        $('textentry').focus();
+        evt.preventDefault();
+        break;
+    }
+
+    if (action !== null) {
+      dbg(action.toLowerCase());
+      rokupost("keypress", action);
+    }
   }
 }
 
@@ -1797,6 +1839,7 @@ window.onload = function(){
 
 	document.onkeyup = handleArrowKeyUp;
 	document.onkeydown = handleArrowKeyDown;
+	document.onkeypress = handleKeyPress;
 
   //setupFavorites();
   $('addFav').onclick = function(){addFav(null);};

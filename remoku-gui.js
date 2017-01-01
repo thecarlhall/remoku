@@ -1148,13 +1148,14 @@ function handleKeyPress(evt) {
         action = "Select";
         break;
       case 32: // space bar
+      case 112: // p
         action = "Play";
         break;
       case 36: // home key
         action = "Home";
         break;
       case 38: // up arrow
-      case 72: // K
+      case 75: // K
         if (evt.shiftKey) {
           action = "VolumeUp";
         }
